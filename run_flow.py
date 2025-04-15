@@ -1,4 +1,5 @@
 import asyncio
+import sys
 import time
 
 from app.agent.manus import Manus
@@ -12,7 +13,11 @@ async def run_flow():
     }
 
     try:
-        prompt = input("Enter your prompt: ")
+        if len(sys.argv) < 2:
+            logger.warning("No prompt provided as argument.")
+            return
+
+        prompt = sys.argv[1]
 
         if prompt.strip().isspace() or not prompt:
             logger.warning("Empty prompt provided.")
@@ -36,7 +41,7 @@ async def run_flow():
         except asyncio.TimeoutError:
             logger.error("Request processing timed out after 1 hour")
             logger.info(
-                "Operation terminated due to timeout. Please try a simpler request."
+                "Operation terminated due to timeout. Please try a simpler request."  # noqa: E501
             )
 
     except KeyboardInterrupt:
